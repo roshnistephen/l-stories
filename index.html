@@ -11,13 +11,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&display=swap"
     rel="stylesheet"
   />
 
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Background Canvas Animation -->
+  <canvas id="bg-canvas"></canvas>
+
   <!-- HEADER -->
   <header class="site-header">
     <div class="container header-inner">
@@ -29,9 +32,20 @@
         </span>
       </a>
 
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="6" width="20" height="14" rx="2" />
+          <circle cx="12" cy="13" r="4" />
+          <circle cx="12" cy="13" r="2" />
+          <path d="M7 6V4a1 1 0 011-1h8a1 1 0 011 1v2" />
+          <circle cx="17" cy="9" r="1" fill="currentColor" />
+        </svg>
+        <span class="menu-text">MENU</span>
+      </button>
+
       <nav class="main-nav">
+        <div class="nav-close-area"></div>
         <ul>
-          <li><a href="#portfolio">Work</a></li>
           <li><a href="#films">Films</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
@@ -39,18 +53,15 @@
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
-
-      <button class="nav-toggle" aria-label="Toggle navigation">
-        <span></span><span></span>
-      </button>
     </div>
   </header>
 
   <!-- HERO -->
   <section id="hero" class="hero">
-    <div class="overlay"></div>
-    <div class="container hero-content">
-      <p class="eyebrow">Hyderabad • Kochi • Destination Weddings</p>
+    <div class="hero-image-container">
+      <img src="images/gallery/SKD03570.jpg" alt="Wedding Photography" class="hero-image" fetchpriority="high" />
+    </div>
+    <div class="hero-content animate-fadeIn">
       <h1>
         Stories of Love, Life<br />
         and Laughter
@@ -61,71 +72,12 @@
         you'll want to relive for a lifetime.
       </p>
       <div class="hero-actions">
-        <a href="#portfolio" class="btn primary">View our work</a>
+        <a href="gallery.html" class="btn primary">View our work</a>
         <a href="#contact" class="btn ghost">Book your date</a>
       </div>
     </div>
   </section>
 
-  <!-- PORTFOLIO -->
-  <section id="portfolio" class="section">
-    <div class="container">
-      <div class="section-header">
-        <h2>Featured Stories</h2>
-        <p>
-          A small glimpse of the weddings, intimate ceremonies  
-          and love-filled celebrations we’ve been trusted to capture.
-        </p>
-      </div>
-
-      <div class="grid portfolio-grid">
-        <!-- Card 1 -->
-        <article class="portfolio-card">
-          <div class="image-wrap">
-            <img src="https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Bride and groom walking together" loading="lazy" />
-          </div>
-          <div class="card-body">
-            <h3>Aditya & Meera</h3>
-            <p>
-              A warm, sun-kissed outdoor wedding with soft pastel tones,
-              candid laughter and heartfelt vows.
-            </p>
-            <span class="tag">Candid Photography</span>
-          </div>
-        </article>
-
-        <!-- Card 2 -->
-        <article class="portfolio-card">
-          <div class="image-wrap">
-            <img src="https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Wedding couple first dance" loading="lazy" />
-          </div>
-          <div class="card-body">
-            <h3>Rahul & Anna</h3>
-            <p>
-              A classic church wedding blended with emotional cinematic
-              storytelling and delicate details.
-            </p>
-            <span class="tag">Wedding Film</span>
-          </div>
-        </article>
-
-        <!-- Card 3 -->
-        <article class="portfolio-card">
-          <div class="image-wrap">
-            <img src="https://images.pexels.com/photos/265730/pexels-photo-265730.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Couple holding hands with rings" loading="lazy" />
-          </div>
-          <div class="card-body">
-            <h3>Arjun & Isha</h3>
-            <p>
-              An intimate, minimal celebration focused on soft portraits,
-              quiet glances and real connection.
-            </p>
-            <span class="tag">Intimate Wedding</span>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
 
   <!-- FILMS -->
   <section id="films" class="section section-alt">
@@ -178,7 +130,10 @@
     <div class="container">
       <div class="about-layout">
         <div class="about-image">
-          <div class="about-photo"></div>
+          <div class="about-photo-container">
+            <img src="images/cover.jpg" alt="L-Stories" class="about-photo-main" />
+            <img src="images/gallery/001.JPG" alt="L-Stories Overlay" class="about-photo-overlay" />
+          </div>
         </div>
         <div class="about-text">
           <h2>About L-Stories</h2>
@@ -210,16 +165,16 @@
   <!-- SERVICES -->
   <section id="services" class="section section-alt">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header animate-fadeIn">
         <h2>Services</h2>
         <p>
-          Simple, flexible collections that can be tailored to your wedding
-          plans and pace.
+          Simple, flexible collections that can be tailored to your special moments
+          and celebrations.
         </p>
       </div>
 
       <div class="grid services-grid">
-        <article class="service-card">
+        <article class="service-card animate-fadeIn">
           <h3>Wedding Photography</h3>
           <p>
             Full-day coverage with a mix of candid moments and elegant
@@ -228,7 +183,7 @@
           <span class="tag">From full-day to half-day</span>
         </article>
 
-        <article class="service-card">
+        <article class="service-card animate-fadeIn">
           <h3>Cinematic Wedding Films</h3>
           <p>
             Story-driven wedding films with natural audio, curated music and
@@ -237,13 +192,40 @@
           <span class="tag">Highlight & full edits</span>
         </article>
 
-        <article class="service-card">
+        <article class="service-card animate-fadeIn">
           <h3>Pre-Wedding & Save-the-Date</h3>
           <p>
             Soft, relaxed sessions that capture your chemistry before the
             wedding — perfect for invites and social media.
           </p>
           <span class="tag">Outdoor / indoor sessions</span>
+        </article>
+
+        <article class="service-card animate-fadeIn">
+          <h3>Baptism</h3>
+          <p>
+            Beautiful documentation of your child's special blessing ceremony,
+            capturing the sacred moments with family and loved ones.
+          </p>
+          <span class="tag">Sacred celebrations</span>
+        </article>
+
+        <article class="service-card animate-fadeIn">
+          <h3>Newborn</h3>
+          <p>
+            Gentle, artistic portraits of your newest family member,
+            preserving those precious first days forever.
+          </p>
+          <span class="tag">Baby photography</span>
+        </article>
+
+        <article class="service-card animate-fadeIn">
+          <h3>Maternity Shoots</h3>
+          <p>
+            Elegant and intimate maternity sessions celebrating the beautiful
+            journey of motherhood with grace and style.
+          </p>
+          <span class="tag">Pregnancy portraits</span>
         </article>
       </div>
     </div>
@@ -300,15 +282,23 @@
       </div>
 
       <div class="contact-layout">
-        <form class="contact-form">
+        <form class="contact-form" id="contactForm">
           <div class="field">
-            <label for="name">Your name</label>
+            <label for="name">Your name <span class="required">*</span></label>
             <input type="text" id="name" name="name" placeholder="Bride / Groom name" required />
+            <span class="error-message" id="nameError"></span>
           </div>
 
           <div class="field">
-            <label for="email">Email</label>
+            <label for="email">Email <span class="required">*</span></label>
             <input type="email" id="email" name="email" placeholder="you@example.com" required />
+            <span class="error-message" id="emailError"></span>
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone / WhatsApp <span class="required">*</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="+91 00000 00000" required />
+            <span class="error-message" id="phoneError"></span>
           </div>
 
           <div class="field two-cols">
@@ -323,11 +313,13 @@
           </div>
 
           <div class="field">
-            <label for="message">Tell us about your day</label>
-            <textarea id="message" name="message" rows="4" placeholder="Ceremony style, events, timings…"></textarea>
+            <label for="message">Tell us about your day <span class="required">*</span></label>
+            <textarea id="message" name="message" rows="4" placeholder="Ceremony style, events, timings…" required></textarea>
+            <span class="error-message" id="messageError"></span>
           </div>
 
           <button type="submit" class="btn primary full-width">Send enquiry</button>
+          <div class="form-status" id="formStatus"></div>
         </form>
 
         <div class="contact-info">
@@ -336,8 +328,8 @@
             Prefer a quick message? Reach us directly:
           </p>
           <p class="contact-lines">
-            <span>Email: <a href="mailto:hello@lstories.in">hello@lstories.in</a></span><br />
-            <span>Phone / WhatsApp: <a href="tel:+919000000000">+91 90000 00000</a></span>
+            <span>Email: <a href="mailto:greetings.lstories@gmail.com">greetings.lstories@gmail.com</a></span><br />
+            <span>Phone / WhatsApp: <a href="tel:+917012668268">+91 70126 68268</a></span>
           </p>
           <p class="note">
             Available for weddings across India and select destination weddings.
@@ -392,13 +384,52 @@
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p>© <span id="year"></span> L-Stories. All rights reserved.</p>
-      <div class="footer-credits">
-        <p>Designed and developed by <strong>Roshni Stephen</strong></p>
-        <p>Powered by <a href="https://lokaai.in/" target="_blank" rel="noopener noreferrer">Loka AI</a></p>
+      <div class="footer-brand">
+        <a href="#hero" class="footer-logo">
+          <img src="images/logo.png" alt="L-Stories" class="footer-logo-img" />
+          <span class="footer-logo-text">L-Stories</span>
+        </a>
+        <p class="footer-tagline">Stories of Love, Life and Laughter</p>
       </div>
-      <div class="footer-links">
-        <a href="#hero">Back to top</a>
+      
+      <div class="footer-nav">
+        <div class="footer-nav-column">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="#films">Films</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-column">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:greetings.lstories@gmail.com">greetings.lstories@gmail.com</a></li>
+            <li><a href="tel:+917012668268">+91 70126 68268</a></li>
+            <li><a href="#contact">Send enquiry</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-column">
+          <h4>Follow</h4>
+          <ul>
+            <li><a href="https://www.instagram.com/official.lstories" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="https://www.facebook.com/profile.php?id=61550211415090" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li><a href="https://www.youtube.com/@official.lstories" target="_blank" rel="noopener noreferrer">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>© <span id="year"></span> L-Stories. All rights reserved.</p>
+        <div class="footer-credits">
+          <p>Designed and developed by <strong>Roshni Stephen</strong> • Powered by <a href="https://lokaai.in/" target="_blank" rel="noopener noreferrer">Loka AI</a></p>
+        </div>
+        <a href="#hero" class="back-to-top">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+          </svg>
+        </a>
       </div>
     </div>
   </footer>
