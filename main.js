@@ -291,7 +291,10 @@ if (canvas) {
   // Initialize particles
   function initParticles() {
     particles = [];
-    const particleCount = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
+    // Cap particle count for performance on large screens
+    const maxParticles = 60;
+    const calculatedCount = Math.floor((canvas.width * canvas.height) / 15000);
+    const particleCount = Math.min(maxParticles, calculatedCount);
     
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
@@ -315,25 +318,34 @@ if (canvas) {
     animationId = requestAnimationFrame(animate);
   }
   
-  // Initialize and start
+  // Check for reduced motion preference
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  
+  // Initialize and start (only if user doesn't prefer reduced motion)
   resizeCanvas();
-  initParticles();
-  animate();
+  if (!prefersReducedMotion) {
+    initParticles();
+    animate();
+  }
   
   // Handle window resize
   window.addEventListener("resize", () => {
     resizeCanvas();
-    initParticles();
-  });
-  
-  // Reduce animation when page is not visible
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      cancelAnimationFrame(animationId);
-    } else {
-      animate();
+    if (!prefersReducedMotion) {
+      initParticles();
     }
   });
+  
+  // Reduce animation when page is not visible (scoped inside canvas check)
+  if (!prefersReducedMotion) {
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animationId);
+      } else {
+        animate();
+      }
+    });
+  }
 }
 
 // ============================================================================

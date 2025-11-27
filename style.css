@@ -569,6 +569,23 @@ body {
   animation: photoSlideOverlay 10s ease-in-out infinite;
 }
 
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .about-photo-main,
+  .about-photo-overlay {
+    animation: none;
+  }
+  
+  .about-photo-main {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .about-photo-overlay {
+    opacity: 0;
+  }
+}
+
 .about-text h2 {
   font-family: var(--font-display);
   font-size: 2.2rem;
@@ -1077,6 +1094,15 @@ body {
 .section-header h2 {
   background-size: 200% auto;
   animation: shimmer 4s linear infinite;
+  will-change: background-position;
+}
+
+/* Respect reduced motion preferences for shimmer */
+@media (prefers-reduced-motion: reduce) {
+  .section-header h2 {
+    animation: none;
+    background-position: center;
+  }
 }
 
 /* ========================================================================
