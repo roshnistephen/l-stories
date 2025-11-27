@@ -191,6 +191,8 @@ body {
 }
 
 .logo-img {
+  background-color: white;
+  transform: scale(1.3);
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
