@@ -19,13 +19,40 @@ document.addEventListener('DOMContentLoaded', function() {
     if (img) {
       images.push(img.src);
       
-      // Open lightbox on click
-      item.addEventListener('click', function() {
+      // Open lightbox on click (but not on like button)
+      item.addEventListener('click', function(e) {
+        if (e.target.closest('.like-btn')) return;
         currentIndex = index;
         openLightbox(images[currentIndex]);
       });
     }
   });
+  
+  // Like button functionality
+  const likeButtons = document.querySelectorAll('.like-btn');
+  likeButtons.forEach((btn) => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      this.classList.toggle('liked');
+      
+      // Add heart burst animation
+      if (this.classList.contains('liked')) {
+        createHeartBurst(this);
+      }
+    });
+  });
+  
+  // Heart burst animation
+  function createHeartBurst(button) {
+    const burst = document.createElement('div');
+    burst.className = 'heart-burst';
+    burst.innerHTML = '❤️';
+    button.appendChild(burst);
+    
+    setTimeout(() => {
+      burst.remove();
+    }, 600);
+  }
   
   // Open lightbox function
   function openLightbox(src) {
@@ -121,6 +148,17 @@ document.addEventListener('DOMContentLoaded', function() {
   // Scroll animation for gallery items
   function animateOnScroll() {
     galleryItems.forEach((item) => {
+      const rect = item.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      if (rect.top < windowHeight * 0.9) {
+        item.classList.add('animate');
+      }
+    });
+    
+    // Animate video items too
+    const videoItems = document.querySelectorAll('.video-item');
+    videoItems.forEach((item) => {
       const rect = item.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       
