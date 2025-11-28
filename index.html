@@ -28,12 +28,16 @@
   <!-- Canonical URL -->
   <link rel="canonical" href="https://lstories.in/" />
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts - optimized loading -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Poppins:wght@300;400;500&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
 
   <link rel="stylesheet" href="style.css" />
+  
+  <!-- Preload critical images -->
+  <link rel="preload" as="image" href="images/logo.png" />
+  <link rel="preload" as="image" href="images/gallery/SKD03570.jpg" />
 </head>
 <body>
   <!-- Background Canvas Animation -->
@@ -78,7 +82,7 @@
   <!-- HERO -->
   <section id="hero" class="hero">
     <div class="hero-image-container">
-      <img src="images/gallery/SKD03570.jpg" alt="Wedding Photography" class="hero-image" fetchpriority="high" />
+      <img src="images/gallery/SKD03570.jpg" alt="Wedding Photography" class="hero-image" fetchpriority="high" decoding="async" />
     </div>
     <div class="hero-content animate-fadeIn">
       <h1>
@@ -135,7 +139,8 @@
               frameborder="0" 
               allow="accelerometer; autoplay; clipboard-write; gyroscope; picture-in-picture" 
               allowfullscreen
-              loading="lazy">
+              loading="lazy"
+              decoding="async">
             </iframe>
             <a href="https://youtu.be/netfsMUfsyo?si=qMHNoY2ELVBlOWqt" target="_blank" rel="noopener noreferrer" class="btn primary video-cta">Watch on YouTube</a>
           </div>
@@ -150,13 +155,7 @@
       <div class="about-layout">
         <div class="about-image">
           <div class="about-photo-container" id="aboutPhotoContainer">
-            <div class="photo-piece piece-1"></div>
-            <div class="photo-piece piece-2"></div>
-            <div class="photo-piece piece-3"></div>
-            <div class="photo-piece piece-4"></div>
-            <img src="" alt="L-Stories" class="about-photo-slide slide-2" />
-            <img src="" alt="L-Stories" class="about-photo-slide slide-3" />
-            <img src="" alt="L-Stories" class="about-photo-slide slide-4" />
+            <img src="images/cover.jpg" alt="L-Stories Wedding Photography" class="about-photo-slide" loading="lazy" decoding="async" />
           </div>
         </div>
         <div class="about-text">
@@ -449,6 +448,6 @@
     </div>
   </footer>
 
-  <script src="main.js"></script>
+  <script src="main.js" defer></script>
 </body>
 </html>

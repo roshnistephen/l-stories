@@ -84,10 +84,13 @@ if (contactForm) {
 
 // ============================================================================
 // Background Canvas Animation - Soothing Wedding Theme with Glitter
+// Deferred loading for better performance
 // ============================================================================
 
 const canvas = document.getElementById("bg-canvas");
 if (canvas) {
+  // Defer canvas animation to after page load
+  const initCanvas = () => {
   const ctx = canvas.getContext("2d");
   let bokehCircles = [];
   let sparkles = [];
@@ -506,7 +509,7 @@ if (canvas) {
         canvas.height = newHeight;
       }
     }, 100);
-  });
+  }, { passive: true });
   
   // Reduce animation when page is not visible
   if (!prefersReducedMotion) {
@@ -517,6 +520,14 @@ if (canvas) {
         animate();
       }
     });
+  }
+  }; // end initCanvas
+  
+  // Defer canvas initialization
+  if (document.readyState === 'complete') {
+    setTimeout(initCanvas, 100);
+  } else {
+    window.addEventListener('load', () => setTimeout(initCanvas, 100));
   }
 }
 
@@ -530,21 +541,124 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// About Section - Random Photo Slideshow
+// About Section - Directional Photo Slideshow with Random Gallery Photos
 const aboutPhotoContainer = document.getElementById("aboutPhotoContainer");
 if (aboutPhotoContainer) {
-  const galleryPhotos = ["images/gallery/001.JPG","images/gallery/01 (19).jpg","images/gallery/03 (11).jpg","images/gallery/8 (46).jpg","images/gallery/8 (52).JPG","images/gallery/8 (54).JPG","images/gallery/ABN00018.jpg","images/gallery/ABN07237.jpg","images/gallery/ABN07556.jpg","images/gallery/ABN08424.jpg","images/gallery/ABN09689.jpg","images/gallery/ABN09728.jpg","images/gallery/ABN09899.jpg","images/gallery/ALX00087.jpg","images/gallery/ALX03102.jpg","images/gallery/ALX03206.jpg","images/gallery/ALX05446.jpg","images/gallery/ALX05472.jpg","images/gallery/ALX05524.jpg","images/gallery/ALX05704.jpg","images/gallery/ALX05763.jpg","images/gallery/ALX06495.jpg","images/gallery/ALX06851.jpg","images/gallery/ALX07090.jpg","images/gallery/ALX07247.jpg","images/gallery/ALX08346.jpg","images/gallery/ASU_6224.jpg","images/gallery/ASU_6693.jpg","images/gallery/ASU_7081.jpg","images/gallery/ASU_7089.jpg","images/gallery/DAC_7163.jpg","images/gallery/DAC_7579.jpg","images/gallery/DAC_7811.jpg","images/gallery/DSC06861.jpg","images/gallery/DSC07098.jpg","images/gallery/JES03165.jpg","images/gallery/JES03662.jpg","images/gallery/JES05141.jpg","images/gallery/SBY00461.jpg","images/gallery/SIM07899.jpg","images/gallery/SIM08146.jpg","images/gallery/SIM09070.jpg","images/gallery/SKD02524.jpg","images/gallery/SKD03570.jpg","images/gallery/SKD03592.jpg"];
-  const scatteredPhotos = ["images/cover.jpg","images/gallery/SKD03570.jpg","images/gallery/ALX05763.jpg","images/gallery/ASU_7081.jpg","images/gallery/DAC_7579.jpg"];
+  const galleryPhotos = [
+    "images/cover.jpg",
+    "images/gallery/001.JPG",
+    "images/gallery/01 (19).jpg",
+    "images/gallery/03 (11).jpg",
+    "images/gallery/8 (46).jpg",
+    "images/gallery/8 (52).JPG",
+    "images/gallery/8 (54).JPG",
+    "images/gallery/ABN00018.jpg",
+    "images/gallery/ABN07237.jpg",
+    "images/gallery/ABN07556.jpg",
+    "images/gallery/ABN08424.jpg",
+    "images/gallery/ABN09689.jpg",
+    "images/gallery/ABN09728.jpg",
+    "images/gallery/ABN09899.jpg",
+    "images/gallery/ALX00087.jpg",
+    "images/gallery/ALX03102.jpg",
+    "images/gallery/ALX03206.jpg",
+    "images/gallery/ALX05446.jpg",
+    "images/gallery/ALX05472.jpg",
+    "images/gallery/ALX05524.jpg",
+    "images/gallery/ALX05704.jpg",
+    "images/gallery/ALX05763.jpg",
+    "images/gallery/ALX06495.jpg",
+    "images/gallery/ALX06851.jpg",
+    "images/gallery/ALX07090.jpg",
+    "images/gallery/ALX07247.jpg",
+    "images/gallery/ALX08346.jpg",
+    "images/gallery/ASU_6224.jpg",
+    "images/gallery/ASU_6693.jpg",
+    "images/gallery/ASU_7081.jpg",
+    "images/gallery/ASU_7089.jpg",
+    "images/gallery/DAC_7163.jpg",
+    "images/gallery/DAC_7579.jpg",
+    "images/gallery/DAC_7811.jpg",
+    "images/gallery/DSC06861.jpg",
+    "images/gallery/DSC07098.jpg",
+    "images/gallery/JES03165.jpg",
+    "images/gallery/JES03662.jpg",
+    "images/gallery/JES05141.jpg",
+    "images/gallery/SBY00461.jpg",
+    "images/gallery/SIM07899.jpg",
+    "images/gallery/SIM08146.jpg",
+    "images/gallery/SIM09070.jpg",
+    "images/gallery/SKD02524.jpg",
+    "images/gallery/SKD03570.jpg",
+    "images/gallery/SKD03592.jpg",
+    "images/gallery/SKD03649.jpg",
+    "images/gallery/SKD03817.jpg"
+  ];
   
-  const shuffle = arr => arr.map(v => ({ v, s: Math.random() })).sort((a, b) => a.s - b.s).map(({ v }) => v);
-  const getRandomPhotos = (pool, count, exclude = []) => shuffle(pool.filter(p => !exclude.includes(p))).slice(0, count);
+  const animations = ["slide-top", "slide-bottom", "slide-left", "slide-right"];
+  let currentSlide = null;
+  let animationIndex = 0;
+  let usedPhotos = [];
   
-  function setRandomPhotos() {
-    const randomScattered = scatteredPhotos[Math.floor(Math.random() * scatteredPhotos.length)];
-    aboutPhotoContainer.querySelectorAll(".photo-piece").forEach(p => p.style.backgroundImage = `url('${randomScattered}')`);
-    const randomSlides = getRandomPhotos(galleryPhotos, 3, [randomScattered]);
-    aboutPhotoContainer.querySelectorAll(".about-photo-slide").forEach((img, i) => { if (randomSlides[i]) img.src = randomSlides[i]; });
+  // Get random photo that hasn't been used recently
+  function getRandomPhoto() {
+    if (usedPhotos.length >= galleryPhotos.length - 5) {
+      usedPhotos = usedPhotos.slice(-3);
+    }
+    let photo;
+    do {
+      photo = galleryPhotos[Math.floor(Math.random() * galleryPhotos.length)];
+    } while (usedPhotos.includes(photo));
+    usedPhotos.push(photo);
+    return photo;
   }
-  setRandomPhotos();
-  setInterval(setRandomPhotos, 24000);
+  
+  // Create and show next slide with directional animation
+  function showNextSlide() {
+    // Remove old slides that have exited
+    aboutPhotoContainer.querySelectorAll(".about-photo-slide.exit").forEach(el => el.remove());
+    
+    // Mark current slide for exit
+    if (currentSlide) {
+      currentSlide.classList.remove("active", ...animations);
+      currentSlide.classList.add("exit");
+    }
+    
+    // Create new slide with lazy loading
+    const newSlide = document.createElement("img");
+    newSlide.className = "about-photo-slide";
+    newSlide.alt = "L-Stories Wedding Photography";
+    newSlide.loading = "lazy";
+    newSlide.decoding = "async";
+    newSlide.src = getRandomPhoto();
+    
+    // Add directional animation class (cycles: top, bottom, left, right)
+    const animation = animations[animationIndex];
+    animationIndex = (animationIndex + 1) % animations.length;
+    
+    aboutPhotoContainer.appendChild(newSlide);
+    
+    // Trigger animation after a small delay
+    requestAnimationFrame(() => {
+      newSlide.classList.add("active", animation);
+    });
+    
+    currentSlide = newSlide;
+  }
+  
+  // Initialize first slide
+  const initialSlides = aboutPhotoContainer.querySelectorAll(".about-photo-slide");
+  if (initialSlides.length > 0) {
+    currentSlide = initialSlides[0];
+    currentSlide.classList.add("active", "slide-top");
+    // Remove other initial slides
+    for (let i = 1; i < initialSlides.length; i++) {
+      initialSlides[i].remove();
+    }
+  } else {
+    showNextSlide();
+  }
+  
+  // Change slide every 3 seconds (1.5s animation + 1.5s display)
+  setInterval(showNextSlide, 3000);
 }

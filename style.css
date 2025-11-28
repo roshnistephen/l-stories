@@ -638,25 +638,15 @@ html {
 .about-photo-container {
   position: relative;
   width: 100%;
-  max-width: 420px;
+  max-width: 500px;
   aspect-ratio: 4 / 5;
-  overflow: visible;
-}
-
-/* Scattered photo pieces animation */
-.photo-piece {
-  position: absolute;
-  width: 50%;
-  height: 50%;
-  background-image: url('images/cover.jpg');
-  background-size: 200% 200%;
+  overflow: hidden;
+  margin: 0 auto;
   border: 1px solid var(--color-border);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  animation: assemblePhoto 24s ease-in-out infinite;
-  z-index: 5;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-/* Slideshow images with different animations */
+/* Slideshow for about section with directional animations */
 .about-photo-slide {
   position: absolute;
   top: 0;
@@ -664,192 +654,102 @@ html {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border: 1px solid var(--color-border);
   opacity: 0;
   z-index: 1;
 }
 
-/* Image 2 - Fade with slight zoom */
-.slide-2 {
-  animation: slideImage2 24s ease-in-out infinite;
+.about-photo-slide.active {
+  opacity: 1;
+  z-index: 2;
 }
 
-@keyframes slideImage2 {
-  0%, 20% {
+/* Top to bottom animation */
+.about-photo-slide.slide-top {
+  animation: slideFromTop 1.5s ease-out forwards;
+}
+
+@keyframes slideFromTop {
+  0% {
     opacity: 0;
-    transform: scale(1);
+    transform: translateY(-100%);
   }
-  25%, 40% {
+  100% {
     opacity: 1;
-    transform: scale(1.02);
-  }
-  45%, 100% {
-    opacity: 0;
-    transform: scale(1.05);
+    transform: translateY(0);
   }
 }
 
-/* Image 3 - Slide from right with fade */
-.slide-3 {
-  animation: slideImage3 24s ease-in-out infinite;
+/* Bottom to top animation */
+.about-photo-slide.slide-bottom {
+  animation: slideFromBottom 1.5s ease-out forwards;
 }
 
-@keyframes slideImage3 {
-  0%, 45% {
+@keyframes slideFromBottom {
+  0% {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateY(100%);
   }
-  50%, 65% {
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Left to right animation */
+.about-photo-slide.slide-left {
+  animation: slideFromLeft 1.5s ease-out forwards;
+}
+
+@keyframes slideFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
     opacity: 1;
     transform: translateX(0);
   }
-  70%, 100% {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
 }
 
-/* Image 4 - Ken Burns effect (slow zoom and pan) */
-.slide-4 {
-  animation: slideImage4 24s ease-in-out infinite;
+/* Right to left animation */
+.about-photo-slide.slide-right {
+  animation: slideFromRight 1.5s ease-out forwards;
 }
 
-@keyframes slideImage4 {
-  0%, 70% {
-    opacity: 0;
-    transform: scale(1.1) translateY(10px);
-  }
-  75%, 90% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  95%, 100% {
-    opacity: 0;
-    transform: scale(0.98) translateY(-10px);
-  }
-}
-
-.piece-1 {
-  top: 0;
-  left: 0;
-  background-position: 0% 0%;
-  animation-name: assemblePiece1;
-}
-
-.piece-2 {
-  top: 0;
-  right: 0;
-  background-position: 100% 0%;
-  animation-name: assemblePiece2;
-}
-
-.piece-3 {
-  bottom: 0;
-  left: 0;
-  background-position: 0% 100%;
-  animation-name: assemblePiece3;
-}
-
-.piece-4 {
-  bottom: 0;
-  right: 0;
-  background-position: 100% 100%;
-  animation-name: assemblePiece4;
-}
-
-@keyframes assemblePiece1 {
+@keyframes slideFromRight {
   0% {
-    transform: translate(-60%, -60%) rotate(-15deg) scale(0.8);
     opacity: 0;
+    transform: translateX(100%);
   }
-  5% {
+  100% {
     opacity: 1;
-  }
-  10%, 20% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  25%, 100% {
-    transform: translate(-60%, -60%) rotate(-15deg) scale(0.8);
-    opacity: 0;
+    transform: translateX(0);
   }
 }
 
-@keyframes assemblePiece2 {
+/* Exit animations */
+.about-photo-slide.exit {
+  z-index: 1;
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
   0% {
-    transform: translate(60%, -60%) rotate(15deg) scale(0.8);
-    opacity: 0;
-  }
-  5% {
     opacity: 1;
   }
-  10%, 20% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  25%, 100% {
-    transform: translate(60%, -60%) rotate(15deg) scale(0.8);
+  100% {
     opacity: 0;
   }
 }
-
-@keyframes assemblePiece3 {
-  0% {
-    transform: translate(-60%, 60%) rotate(15deg) scale(0.8);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  10%, 20% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  25%, 100% {
-    transform: translate(-60%, 60%) rotate(15deg) scale(0.8);
-    opacity: 0;
-  }
-}
-
-@keyframes assemblePiece4 {
-  0% {
-    transform: translate(60%, 60%) rotate(-15deg) scale(0.8);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  10%, 20% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  25%, 100% {
-    transform: translate(60%, 60%) rotate(-15deg) scale(0.8);
-    opacity: 0;
-  }
-}
-
-/* Stagger animation for each piece */
-.piece-1 { animation-delay: 0s; }
-.piece-2 { animation-delay: 0.15s; }
-.piece-3 { animation-delay: 0.3s; }
-.piece-4 { animation-delay: 0.45s; }
 
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  .photo-piece {
-    animation: none;
-    transform: translate(0, 0) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  
   .about-photo-slide {
-    animation: none;
-    opacity: 0;
+    animation: none !important;
+    transition: opacity 0.3s ease;
   }
-  
-  .slide-2 {
-    opacity: 0;
+  .about-photo-slide.active {
+    opacity: 1;
   }
 }
 
