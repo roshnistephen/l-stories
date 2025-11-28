@@ -367,3 +367,115 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     }
   });
 });
+
+// ============================================================================
+// About Section - Random Photo Slideshow
+// ============================================================================
+
+const aboutPhotoContainer = document.getElementById("aboutPhotoContainer");
+
+if (aboutPhotoContainer) {
+  // Gallery photos pool
+  const galleryPhotos = [
+    "images/gallery/001.JPG",
+    "images/gallery/01 (19).jpg",
+    "images/gallery/03 (11).jpg",
+    "images/gallery/8 (46).jpg",
+    "images/gallery/8 (52).JPG",
+    "images/gallery/8 (54).JPG",
+    "images/gallery/ABN00018.jpg",
+    "images/gallery/ABN07237.jpg",
+    "images/gallery/ABN07556.jpg",
+    "images/gallery/ABN08424.jpg",
+    "images/gallery/ABN09689.jpg",
+    "images/gallery/ABN09728.jpg",
+    "images/gallery/ABN09899.jpg",
+    "images/gallery/ALX00087.jpg",
+    "images/gallery/ALX03102.jpg",
+    "images/gallery/ALX03206.jpg",
+    "images/gallery/ALX05446.jpg",
+    "images/gallery/ALX05472.jpg",
+    "images/gallery/ALX05524.jpg",
+    "images/gallery/ALX05704.jpg",
+    "images/gallery/ALX05763.jpg",
+    "images/gallery/ALX06495.jpg",
+    "images/gallery/ALX06851.jpg",
+    "images/gallery/ALX07090.jpg",
+    "images/gallery/ALX07247.jpg",
+    "images/gallery/ALX08346.jpg",
+    "images/gallery/ASU_6224.jpg",
+    "images/gallery/ASU_6693.jpg",
+    "images/gallery/ASU_7081.jpg",
+    "images/gallery/ASU_7089.jpg",
+    "images/gallery/DAC_7163.jpg",
+    "images/gallery/DAC_7579.jpg",
+    "images/gallery/DAC_7811.jpg",
+    "images/gallery/DSC06861.jpg",
+    "images/gallery/DSC07098.jpg",
+    "images/gallery/JES03165.jpg",
+    "images/gallery/JES03662.jpg",
+    "images/gallery/JES05141.jpg",
+    "images/gallery/SBY00461.jpg",
+    "images/gallery/SIM07899.jpg",
+    "images/gallery/SIM08146.jpg",
+    "images/gallery/SIM09070.jpg",
+    "images/gallery/SKD02524.jpg",
+    "images/gallery/SKD03570.jpg",
+    "images/gallery/SKD03592.jpg"
+  ];
+
+  // Scattered image photos pool (for the 4-piece animation)
+  const scatteredPhotos = [
+    "images/cover.jpg",
+    "images/gallery/SKD03570.jpg",
+    "images/gallery/ALX05763.jpg",
+    "images/gallery/ASU_7081.jpg",
+    "images/gallery/DAC_7579.jpg"
+  ];
+
+  // Shuffle array function
+  function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
+  // Get random photos without repetition
+  function getRandomPhotos(pool, count, exclude = []) {
+    const available = pool.filter(p => !exclude.includes(p));
+    const shuffled = shuffleArray(available);
+    return shuffled.slice(0, count);
+  }
+
+  // Set random photos for slideshow
+  function setRandomPhotos() {
+    const photoPieces = aboutPhotoContainer.querySelectorAll(".photo-piece");
+    const slideImages = aboutPhotoContainer.querySelectorAll(".about-photo-slide");
+    
+    // Pick random scattered image
+    const randomScattered = scatteredPhotos[Math.floor(Math.random() * scatteredPhotos.length)];
+    
+    // Set scattered pieces background
+    photoPieces.forEach(piece => {
+      piece.style.backgroundImage = `url('${randomScattered}')`;
+    });
+    
+    // Pick 3 random unique photos for slides
+    const randomSlides = getRandomPhotos(galleryPhotos, 3, [randomScattered]);
+    
+    slideImages.forEach((img, index) => {
+      if (randomSlides[index]) {
+        img.src = randomSlides[index];
+      }
+    });
+  }
+
+  // Initial random selection
+  setRandomPhotos();
+
+  // Change photos every cycle (24 seconds)
+  setInterval(setRandomPhotos, 24000);
+}

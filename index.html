@@ -130,9 +130,14 @@
     <div class="container">
       <div class="about-layout">
         <div class="about-image">
-          <div class="about-photo-container">
-            <img src="images/cover.jpg" alt="L-Stories" class="about-photo-main" />
-            <img src="images/gallery/001.JPG" alt="L-Stories Overlay" class="about-photo-overlay" />
+          <div class="about-photo-container" id="aboutPhotoContainer">
+            <div class="photo-piece piece-1"></div>
+            <div class="photo-piece piece-2"></div>
+            <div class="photo-piece piece-3"></div>
+            <div class="photo-piece piece-4"></div>
+            <img src="" alt="L-Stories" class="about-photo-slide slide-2" />
+            <img src="" alt="L-Stories" class="about-photo-slide slide-3" />
+            <img src="" alt="L-Stories" class="about-photo-slide slide-4" />
           </div>
         </div>
         <div class="about-text">
@@ -284,52 +289,52 @@
       <div class="contact-layout">
         <form class="contact-form" id="contactForm">
           <div class="field">
-            <label for="name"><span class="icon">👤</span> Your name <span class="required">*</span></label>
+            <label for="name">Your Name <span class="required">*</span></label>
             <input type="text" id="name" name="name" placeholder="Bride / Groom name" required />
             <span class="error-message" id="nameError"></span>
           </div>
 
           <div class="field">
-            <label for="email"><span class="icon">✉️</span> Email <span class="required">*</span></label>
+            <label for="email">Email <span class="required">*</span></label>
             <input type="email" id="email" name="email" placeholder="you@example.com" required />
             <span class="error-message" id="emailError"></span>
           </div>
 
           <div class="field">
-            <label for="phone"><span class="icon">📱</span> Phone / WhatsApp <span class="required">*</span></label>
+            <label for="phone">Phone / WhatsApp <span class="required">*</span></label>
             <input type="tel" id="phone" name="phone" placeholder="+91 00000 00000" required />
             <span class="error-message" id="phoneError"></span>
           </div>
 
           <div class="field two-cols">
             <div>
-              <label for="date"><span class="icon">📅</span> Wedding date</label>
+              <label for="date">Wedding Date</label>
               <input type="date" id="date" name="date" />
             </div>
             <div>
-              <label for="location"><span class="icon">📍</span> City / Venue</label>
+              <label for="location">City / Venue</label>
               <input type="text" id="location" name="location" placeholder="Hyderabad, Kochi, etc." />
             </div>
           </div>
 
           <div class="field">
-            <label for="message"><span class="icon">💬</span> Tell us about your day <span class="required">*</span></label>
+            <label for="message">Tell Us About Your Day <span class="required">*</span></label>
             <textarea id="message" name="message" rows="4" placeholder="Ceremony style, events, timings…" required></textarea>
             <span class="error-message" id="messageError"></span>
           </div>
 
-          <button type="submit" class="btn primary full-width">📷 Send enquiry</button>
+          <button type="submit" class="btn primary full-width">Send Enquiry</button>
           <div class="form-status" id="formStatus"></div>
         </form>
 
         <div class="contact-info">
-          <h3>Direct contact</h3>
+          <h3>Direct Contact</h3>
           <p>
             Prefer a quick message? Reach us directly:
           </p>
           <p class="contact-lines">
-            <span>✉️ Email: <a href="mailto:greetings.lstories@gmail.com">greetings.lstories@gmail.com</a></span><br />
-            <span>📞 Phone / WhatsApp: <a href="tel:+917012668268">+91 70126 68268</a></span>
+            <span>Email: <a href="mailto:greetings.lstories@gmail.com">greetings.lstories@gmail.com</a></span>
+            <span>Phone / WhatsApp: <a href="tel:+917012668268">+91 70126 68268</a></span>
           </p>
           <p class="note">
             Available for weddings across India and select destination weddings.

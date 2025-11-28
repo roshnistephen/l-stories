@@ -1,8 +1,7 @@
 /* Gallery Hero */
 .gallery-hero {
   position: relative;
-  min-height: 20vh;
-  max-height: 200px;
+  min-height: 40vh;
   color: #fdfbf8;
   display: flex;
   align-items: center;
@@ -413,8 +412,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .gallery-hero {
-    min-height: 15vh;
-    max-height: 150px;
+    min-height: 30vh;
     padding-top: 5rem;
     padding-bottom: 1rem;
   }
