@@ -1,0 +1,18 @@
+# L-Stories - Wedding Photography & Films Website
+# https://lstories.in
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: *
+Allow: /
+Disallow: /.git/
+Disallow: /.DS_Store
+
+# Sitemap location
+Sitemap: https://lstories.in/sitemap.xml

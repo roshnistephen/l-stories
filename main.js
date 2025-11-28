@@ -2,185 +2,84 @@
 // L-Stories - Main JavaScript
 // ============================================================================
 
-// Mobile Navigation Toggle
+// DOM Elements
 const navToggle = document.querySelector(".nav-toggle");
 const mainNav = document.querySelector(".main-nav");
 const navCloseArea = document.querySelector(".nav-close-area");
 const menuText = document.querySelector(".menu-text");
+const header = document.querySelector(".site-header");
+const yearSpan = document.getElementById("year");
 
+// Helper: Close navigation menu
+function closeNav() {
+  if (mainNav) mainNav.classList.remove("open");
+  if (menuText) menuText.textContent = "MENU";
+}
+
+// Mobile Navigation
 if (navToggle && mainNav) {
   navToggle.addEventListener("click", () => {
-    mainNav.classList.toggle("open");
-    if (menuText) {
-      menuText.textContent = mainNav.classList.contains("open") ? "CLOSE" : "MENU";
-    }
+    const isOpen = mainNav.classList.toggle("open");
+    if (menuText) menuText.textContent = isOpen ? "CLOSE" : "MENU";
   });
-
-  // Close menu when clicking outside
-  if (navCloseArea) {
-    navCloseArea.addEventListener("click", () => {
-      mainNav.classList.remove("open");
-      if (menuText) {
-        menuText.textContent = "MENU";
-      }
-    });
-  }
-
-  // Close menu when clicking on nav links
-  const navLinks = mainNav.querySelectorAll("a");
-  navLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      mainNav.classList.remove("open");
-      if (menuText) {
-        menuText.textContent = "MENU";
-      }
-    });
-  });
+  if (navCloseArea) navCloseArea.addEventListener("click", closeNav);
+  mainNav.querySelectorAll("a").forEach(link => link.addEventListener("click", closeNav));
 }
 
 // Header scroll effect
-const header = document.querySelector(".site-header");
 if (header) {
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 100) {
-      header.classList.add("scrolled");
-    } else {
-      header.classList.remove("scrolled");
-    }
-  });
+  window.addEventListener("scroll", () => header.classList.toggle("scrolled", window.scrollY > 100), { passive: true });
 }
 
 // Auto year in footer
-const yearSpan = document.getElementById("year");
-if (yearSpan) {
-  yearSpan.textContent = new Date().getFullYear();
-}
+if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-// ============================================================================
 // Scroll Animation for Elements
-// ============================================================================
-
 const animateOnScroll = () => {
-  const elements = document.querySelectorAll(".animate-fadeIn");
-  
-  elements.forEach((el) => {
-    const elementTop = el.getBoundingClientRect().top;
-    const windowHeight = window.innerHeight;
-    
-    if (elementTop < windowHeight - 100) {
-      el.classList.add("visible");
-    }
+  const windowHeight = window.innerHeight;
+  document.querySelectorAll(".animate-fadeIn").forEach(el => {
+    if (el.getBoundingClientRect().top < windowHeight - 100) el.classList.add("visible");
   });
 };
-
-// Initial check and scroll listener
 window.addEventListener("load", animateOnScroll);
-window.addEventListener("scroll", animateOnScroll);
+window.addEventListener("scroll", animateOnScroll, { passive: true });
 
-// ============================================================================
 // Contact Form Validation and Submission
-// ============================================================================
-
 const contactForm = document.getElementById("contactForm");
 const formStatus = document.getElementById("formStatus");
+
+const showError = (id, msg) => { const el = document.getElementById(id); if (el) el.textContent = msg; };
+const clearErrors = () => {
+  document.querySelectorAll(".error-message").forEach(el => el.textContent = "");
+  if (formStatus) { formStatus.classList.remove("success", "error"); formStatus.style.display = "none"; }
+};
+const showFormStatus = (type, msg) => {
+  if (formStatus) { formStatus.textContent = msg; formStatus.className = `form-status ${type}`; formStatus.style.display = "block"; }
+};
 
 if (contactForm) {
   contactForm.addEventListener("submit", function(e) {
     e.preventDefault();
-    
-    // Clear previous errors
     clearErrors();
     
-    // Get form values
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const date = document.getElementById("date").value;
-    const location = document.getElementById("location").value.trim();
-    const message = document.getElementById("message").value.trim();
+    const getValue = id => (document.getElementById(id)?.value || "").trim();
+    const name = getValue("name"), email = getValue("email"), phone = getValue("phone");
+    const date = getValue("date"), location = getValue("location"), message = getValue("message");
     
     let isValid = true;
-    
-    // Validate name
-    if (!name || name.length < 2) {
-      showError("nameError", "Please enter your name (at least 2 characters)");
-      isValid = false;
-    }
-    
-    // Validate email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email || !emailRegex.test(email)) {
-      showError("emailError", "Please enter a valid email address");
-      isValid = false;
-    }
-    
-    // Validate phone
-    const phoneRegex = /^[\+]?[0-9\s\-]{10,}$/;
-    if (!phone || !phoneRegex.test(phone)) {
-      showError("phoneError", "Please enter a valid phone number");
-      isValid = false;
-    }
-    
-    // Validate message
-    if (!message || message.length < 10) {
-      showError("messageError", "Please tell us more about your day (at least 10 characters)");
-      isValid = false;
-    }
+    if (!name || name.length < 2) { showError("nameError", "Please enter your name (at least 2 characters)"); isValid = false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError("emailError", "Please enter a valid email address"); isValid = false; }
+    if (!/^[\+]?[0-9\s\-]{10,}$/.test(phone)) { showError("phoneError", "Please enter a valid phone number"); isValid = false; }
+    if (!message || message.length < 10) { showError("messageError", "Please tell us more about your day (at least 10 characters)"); isValid = false; }
     
     if (isValid) {
-      // Prepare email body
       const subject = encodeURIComponent(`Wedding Enquiry from ${name}`);
-      const body = encodeURIComponent(
-        `Name: ${name}\n` +
-        `Email: ${email}\n` +
-        `Phone: ${phone}\n` +
-        `Wedding Date: ${date || "Not specified"}\n` +
-        `Location: ${location || "Not specified"}\n\n` +
-        `Message:\n${message}`
-      );
-      
-      // Open mailto link
-      const mailtoLink = `mailto:greetings.lstories@gmail.com?subject=${subject}&body=${body}`;
-      window.location.href = mailtoLink;
-      
-      // Show success message
+      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nWedding Date: ${date || "Not specified"}\nLocation: ${location || "Not specified"}\n\nMessage:\n${message}`);
+      window.location.href = `mailto:greetings.lstories@gmail.com?subject=${subject}&body=${body}`;
       showFormStatus("success", "Opening your email client... If it doesn't open, please email us directly at greetings.lstories@gmail.com");
-      
-      // Reset form after a delay
-      setTimeout(() => {
-        contactForm.reset();
-        formStatus.classList.remove("success");
-        formStatus.style.display = "none";
-      }, 5000);
+      setTimeout(() => { contactForm.reset(); formStatus.style.display = "none"; }, 5000);
     }
   });
-}
-
-function showError(elementId, message) {
-  const errorElement = document.getElementById(elementId);
-  if (errorElement) {
-    errorElement.textContent = message;
-  }
-}
-
-function clearErrors() {
-  const errorMessages = document.querySelectorAll(".error-message");
-  errorMessages.forEach((el) => {
-    el.textContent = "";
-  });
-  if (formStatus) {
-    formStatus.classList.remove("success", "error");
-    formStatus.style.display = "none";
-  }
-}
-
-function showFormStatus(type, message) {
-  if (formStatus) {
-    formStatus.textContent = message;
-    formStatus.classList.remove("success", "error");
-    formStatus.classList.add(type);
-    formStatus.style.display = "block";
-  }
 }
 
 // ============================================================================
@@ -621,134 +520,31 @@ if (canvas) {
   }
 }
 
-// ============================================================================
 // Smooth Scroll for anchor links
-// ============================================================================
-
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener("click", function(e) {
     const targetId = this.getAttribute("href");
     if (targetId === "#") return;
-    
-    const targetElement = document.querySelector(targetId);
-    if (targetElement) {
-      e.preventDefault();
-      targetElement.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    }
+    const target = document.querySelector(targetId);
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth", block: "start" }); }
   });
 });
 
-// ============================================================================
 // About Section - Random Photo Slideshow
-// ============================================================================
-
 const aboutPhotoContainer = document.getElementById("aboutPhotoContainer");
-
 if (aboutPhotoContainer) {
-  // Gallery photos pool
-  const galleryPhotos = [
-    "images/gallery/001.JPG",
-    "images/gallery/01 (19).jpg",
-    "images/gallery/03 (11).jpg",
-    "images/gallery/8 (46).jpg",
-    "images/gallery/8 (52).JPG",
-    "images/gallery/8 (54).JPG",
-    "images/gallery/ABN00018.jpg",
-    "images/gallery/ABN07237.jpg",
-    "images/gallery/ABN07556.jpg",
-    "images/gallery/ABN08424.jpg",
-    "images/gallery/ABN09689.jpg",
-    "images/gallery/ABN09728.jpg",
-    "images/gallery/ABN09899.jpg",
-    "images/gallery/ALX00087.jpg",
-    "images/gallery/ALX03102.jpg",
-    "images/gallery/ALX03206.jpg",
-    "images/gallery/ALX05446.jpg",
-    "images/gallery/ALX05472.jpg",
-    "images/gallery/ALX05524.jpg",
-    "images/gallery/ALX05704.jpg",
-    "images/gallery/ALX05763.jpg",
-    "images/gallery/ALX06495.jpg",
-    "images/gallery/ALX06851.jpg",
-    "images/gallery/ALX07090.jpg",
-    "images/gallery/ALX07247.jpg",
-    "images/gallery/ALX08346.jpg",
-    "images/gallery/ASU_6224.jpg",
-    "images/gallery/ASU_6693.jpg",
-    "images/gallery/ASU_7081.jpg",
-    "images/gallery/ASU_7089.jpg",
-    "images/gallery/DAC_7163.jpg",
-    "images/gallery/DAC_7579.jpg",
-    "images/gallery/DAC_7811.jpg",
-    "images/gallery/DSC06861.jpg",
-    "images/gallery/DSC07098.jpg",
-    "images/gallery/JES03165.jpg",
-    "images/gallery/JES03662.jpg",
-    "images/gallery/JES05141.jpg",
-    "images/gallery/SBY00461.jpg",
-    "images/gallery/SIM07899.jpg",
-    "images/gallery/SIM08146.jpg",
-    "images/gallery/SIM09070.jpg",
-    "images/gallery/SKD02524.jpg",
-    "images/gallery/SKD03570.jpg",
-    "images/gallery/SKD03592.jpg"
-  ];
-
-  // Scattered image photos pool (for the 4-piece animation)
-  const scatteredPhotos = [
-    "images/cover.jpg",
-    "images/gallery/SKD03570.jpg",
-    "images/gallery/ALX05763.jpg",
-    "images/gallery/ASU_7081.jpg",
-    "images/gallery/DAC_7579.jpg"
-  ];
-
-  // Shuffle array function
-  function shuffleArray(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  }
-
-  // Get random photos without repetition
-  function getRandomPhotos(pool, count, exclude = []) {
-    const available = pool.filter(p => !exclude.includes(p));
-    const shuffled = shuffleArray(available);
-    return shuffled.slice(0, count);
-  }
-
-  // Set random photos for slideshow
+  const galleryPhotos = ["images/gallery/001.JPG","images/gallery/01 (19).jpg","images/gallery/03 (11).jpg","images/gallery/8 (46).jpg","images/gallery/8 (52).JPG","images/gallery/8 (54).JPG","images/gallery/ABN00018.jpg","images/gallery/ABN07237.jpg","images/gallery/ABN07556.jpg","images/gallery/ABN08424.jpg","images/gallery/ABN09689.jpg","images/gallery/ABN09728.jpg","images/gallery/ABN09899.jpg","images/gallery/ALX00087.jpg","images/gallery/ALX03102.jpg","images/gallery/ALX03206.jpg","images/gallery/ALX05446.jpg","images/gallery/ALX05472.jpg","images/gallery/ALX05524.jpg","images/gallery/ALX05704.jpg","images/gallery/ALX05763.jpg","images/gallery/ALX06495.jpg","images/gallery/ALX06851.jpg","images/gallery/ALX07090.jpg","images/gallery/ALX07247.jpg","images/gallery/ALX08346.jpg","images/gallery/ASU_6224.jpg","images/gallery/ASU_6693.jpg","images/gallery/ASU_7081.jpg","images/gallery/ASU_7089.jpg","images/gallery/DAC_7163.jpg","images/gallery/DAC_7579.jpg","images/gallery/DAC_7811.jpg","images/gallery/DSC06861.jpg","images/gallery/DSC07098.jpg","images/gallery/JES03165.jpg","images/gallery/JES03662.jpg","images/gallery/JES05141.jpg","images/gallery/SBY00461.jpg","images/gallery/SIM07899.jpg","images/gallery/SIM08146.jpg","images/gallery/SIM09070.jpg","images/gallery/SKD02524.jpg","images/gallery/SKD03570.jpg","images/gallery/SKD03592.jpg"];
+  const scatteredPhotos = ["images/cover.jpg","images/gallery/SKD03570.jpg","images/gallery/ALX05763.jpg","images/gallery/ASU_7081.jpg","images/gallery/DAC_7579.jpg"];
+  
+  const shuffle = arr => arr.map(v => ({ v, s: Math.random() })).sort((a, b) => a.s - b.s).map(({ v }) => v);
+  const getRandomPhotos = (pool, count, exclude = []) => shuffle(pool.filter(p => !exclude.includes(p))).slice(0, count);
+  
   function setRandomPhotos() {
-    const photoPieces = aboutPhotoContainer.querySelectorAll(".photo-piece");
-    const slideImages = aboutPhotoContainer.querySelectorAll(".about-photo-slide");
-    
-    // Pick random scattered image
     const randomScattered = scatteredPhotos[Math.floor(Math.random() * scatteredPhotos.length)];
-    
-    // Set scattered pieces background
-    photoPieces.forEach(piece => {
-      piece.style.backgroundImage = `url('${randomScattered}')`;
-    });
-    
-    // Pick 3 random unique photos for slides
+    aboutPhotoContainer.querySelectorAll(".photo-piece").forEach(p => p.style.backgroundImage = `url('${randomScattered}')`);
     const randomSlides = getRandomPhotos(galleryPhotos, 3, [randomScattered]);
-    
-    slideImages.forEach((img, index) => {
-      if (randomSlides[index]) {
-        img.src = randomSlides[index];
-      }
-    });
+    aboutPhotoContainer.querySelectorAll(".about-photo-slide").forEach((img, i) => { if (randomSlides[i]) img.src = randomSlides[i]; });
   }
-
-  // Initial random selection
   setRandomPhotos();
-
-  // Change photos every cycle (24 seconds)
   setInterval(setRandomPhotos, 24000);
 }
