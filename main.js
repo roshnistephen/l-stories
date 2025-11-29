@@ -2,6 +2,27 @@
 // L-Stories - Main JavaScript
 // ============================================================================
 
+// Page Loader - Smooth page reveal
+const pageLoader = document.getElementById("pageLoader");
+const contentWrapper = document.getElementById("contentWrapper");
+
+// Show content after page loads
+const revealContent = () => {
+  if (pageLoader) {
+    pageLoader.classList.add("loaded");
+  }
+  if (contentWrapper) {
+    contentWrapper.classList.add("visible");
+  }
+};
+
+// Trigger reveal when DOM is ready and critical assets loaded
+if (document.readyState === 'complete') {
+  setTimeout(revealContent, 300);
+} else {
+  window.addEventListener('load', () => setTimeout(revealContent, 300));
+}
+
 // DOM Elements
 const navToggle = document.querySelector(".nav-toggle");
 const mainNav = document.querySelector(".main-nav");
@@ -33,6 +54,35 @@ if (header) {
 
 // Auto year in footer
 if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+// Smooth Image Loading - Add loaded class when images load
+const initImageLoading = () => {
+  document.querySelectorAll('img').forEach(img => {
+    if (img.complete) {
+      img.classList.add('loaded');
+    } else {
+      img.addEventListener('load', () => img.classList.add('loaded'));
+      img.addEventListener('error', () => img.classList.add('loaded')); // Show even on error
+    }
+  });
+};
+initImageLoading();
+
+// Re-run for dynamically added images
+const imgObserver = new MutationObserver(mutations => {
+  mutations.forEach(mutation => {
+    mutation.addedNodes.forEach(node => {
+      if (node.nodeName === 'IMG') {
+        if (node.complete) {
+          node.classList.add('loaded');
+        } else {
+          node.addEventListener('load', () => node.classList.add('loaded'));
+        }
+      }
+    });
+  });
+});
+imgObserver.observe(document.body, { childList: true, subtree: true });
 
 // Scroll Animation for Elements
 const animateOnScroll = () => {
@@ -417,26 +467,27 @@ if (canvas) {
     dustParticles = [];
     waves = [];
     
-    // Bokeh circles
-    const bokehCount = Math.min(12, Math.floor(canvas.width / 150));
+    // Bokeh circles - reduced for performance
+    const isMobile = window.innerWidth < 768;
+    const bokehCount = isMobile ? Math.min(6, Math.floor(canvas.width / 200)) : Math.min(12, Math.floor(canvas.width / 150));
     for (let i = 0; i < bokehCount; i++) {
       bokehCircles.push(new BokehCircle());
     }
     
-    // Glitter particles (main sparkle effect)
-    const glitterCount = Math.min(80, Math.floor(canvas.width / 20));
+    // Glitter particles (main sparkle effect) - reduced for performance
+    const glitterCount = isMobile ? Math.min(30, Math.floor(canvas.width / 30)) : Math.min(80, Math.floor(canvas.width / 20));
     for (let i = 0; i < glitterCount; i++) {
       glitterParticles.push(new GlitterParticle());
     }
     
-    // Sparkles (floating stars)
-    const sparkleCount = Math.min(50, Math.floor(canvas.width / 30));
+    // Sparkles (floating stars) - reduced for performance
+    const sparkleCount = isMobile ? Math.min(20, Math.floor(canvas.width / 40)) : Math.min(50, Math.floor(canvas.width / 30));
     for (let i = 0; i < sparkleCount; i++) {
       sparkles.push(new Sparkle());
     }
     
-    // Dust particles
-    const dustCount = Math.min(60, Math.floor(canvas.width / 30));
+    // Dust particles - reduced for performance
+    const dustCount = isMobile ? Math.min(25, Math.floor(canvas.width / 40)) : Math.min(60, Math.floor(canvas.width / 30));
     for (let i = 0; i < dustCount; i++) {
       dustParticles.push(new DustParticle());
     }
@@ -590,9 +641,7 @@ if (aboutPhotoContainer) {
     "images/gallery/SIM09070.jpg",
     "images/gallery/SKD02524.jpg",
     "images/gallery/SKD03570.jpg",
-    "images/gallery/SKD03592.jpg",
-    "images/gallery/SKD03649.jpg",
-    "images/gallery/SKD03817.jpg"
+    "images/gallery/SKD03592.jpg"
   ];
   
   const animations = ["slide-top", "slide-bottom", "slide-left", "slide-right"];

@@ -642,7 +642,10 @@ html {
   aspect-ratio: 4 / 5;
   overflow: hidden;
   margin: 0 auto;
-  border: 1px solid var(--color-border);
+  background: transparent;
+}
+
+.about-photo-container:has(.about-photo-slide.active) {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
@@ -1774,6 +1777,35 @@ html {
   }
 }
 
+/* Performance optimization for mobile - reduce animations */
+@media (max-width: 768px) {
+  .section::after,
+  .hero::after,
+  .site-footer::before,
+  .main-nav::after {
+    animation: none;
+    opacity: 0.4;
+  }
+  
+  .service-card,
+  .testimonial-card {
+    animation: none;
+  }
+  
+  .service-card::after,
+  .testimonial-card::after {
+    display: none;
+  }
+  
+  .btn.primary {
+    animation: none;
+  }
+  
+  .btn.primary::after {
+    display: none;
+  }
+}
+
 /* ========================================================================
    RESPONSIVE DESIGN
    ======================================================================== */
@@ -1814,8 +1846,16 @@ html {
     gap: 3rem;
   }
   
+  .about-image {
+    order: -1;
+  }
+  
+  .about-photo-container {
+    max-width: 400px;
+  }
+  
   .footer-nav {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
   }
   
@@ -1869,6 +1909,23 @@ html {
     flex-direction: row;
     justify-content: center;
   }
+  
+  .footer-nav {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .about-photo-container {
+    max-width: 350px;
+  }
+  
+  .quote-section {
+    padding: 1.5rem;
+  }
+  
+  .quote-section p {
+    font-size: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1883,6 +1940,10 @@ html {
   
   .section-header h2 {
     font-size: 1.8rem;
+  }
+  
+  .section-header p {
+    font-size: 0.9rem;
   }
   
   .hero-actions {
@@ -1910,9 +1971,242 @@ html {
   .contact-form::after {
     display: none;
   }
+  
+  .about-photo-container {
+    max-width: 300px;
+  }
+  
+  .about-text h2 {
+    font-size: 1.8rem;
+  }
+  
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .service-card {
+    padding: 1.8rem 1.5rem;
+  }
+  
+  .service-card h3 {
+    font-size: 1.15rem;
+  }
+  
+  .testimonial-card {
+    padding: 1.5rem;
+  }
+  
+  .contact-info {
+    padding: 1.5rem;
+  }
+  
+  .contact-info h3 {
+    font-size: 1.3rem;
+  }
+  
+  .styled-list li {
+    font-size: 0.9rem;
+  }
+  
+  .films-text p {
+    font-size: 0.95rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .container {
+    width: calc(100% - 1.5rem);
+  }
+  
+  .hero h1 {
+    font-size: 1.7rem;
+  }
+  
+  .section-header h2 {
+    font-size: 1.6rem;
+  }
+  
+  .btn {
+    padding: 0.8rem 1.2rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+  
+  .section {
+    padding: 3rem 0;
+  }
+  
+  .quote-section {
+    padding: 1.2rem;
+  }
+  
+  .quote-section p {
+    font-size: 0.95rem;
+  }
+  
+  .service-card {
+    padding: 1.5rem 1.2rem;
+  }
+  
+  .nav-toggle {
+    padding: 0.6rem;
+  }
+  
+  .camera-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+  
+  .menu-text {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+  }
 }
 
 /* Hidden class for menu toggle */
 .main-nav.open ~ .nav-toggle .menu-text::before {
   content: 'CLOSE';
+}
+
+/* ========================================================================
+   SMOOTH IMAGE LOADING
+   ======================================================================== */
+
+/* Image loading animation */
+img {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+img.loaded,
+img[src*="logo"] {
+  opacity: 1;
+}
+
+/* Ensure logo is always visible */
+.logo-img,
+.loader-logo {
+  opacity: 1 !important;
+}
+
+/* Lazy load placeholder effect */
+.hero-image,
+.about-photo-slide {
+  background: linear-gradient(135deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
+}
+
+/* Hero image should be visible immediately */
+.hero-image {
+  opacity: 1 !important;
+}
+
+/* ========================================================================
+   WHATSAPP FLOATING BUTTON
+   ======================================================================== */
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 
+    0 4px 15px rgba(37, 211, 102, 0.4),
+    0 8px 30px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: whatsappPulse 2s ease-in-out infinite;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.05) translateY(-3px);
+  box-shadow: 
+    0 6px 20px rgba(37, 211, 102, 0.5),
+    0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.whatsapp-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.whatsapp-text {
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+@keyframes whatsappPulse {
+  0%, 100% {
+    box-shadow: 
+      0 4px 15px rgba(37, 211, 102, 0.4),
+      0 8px 30px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 4px 20px rgba(37, 211, 102, 0.6),
+      0 8px 35px rgba(0, 0, 0, 0.25),
+      0 0 0 8px rgba(37, 211, 102, 0.15);
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .whatsapp-float {
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+  }
+  
+  .whatsapp-icon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .whatsapp-float {
+    bottom: 15px;
+    right: 15px;
+    padding: 14px;
+    border-radius: 50%;
+    animation: none; /* Disable animation on mobile for performance */
+  }
+  
+  .whatsapp-text {
+    display: none;
+  }
+  
+  .whatsapp-icon {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+@media (max-width: 360px) {
+  .whatsapp-float {
+    bottom: 12px;
+    right: 12px;
+    padding: 12px;
+  }
+  
+  .whatsapp-icon {
+    width: 24px;
+    height: 24px;
+  }
 }
